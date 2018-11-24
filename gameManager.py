@@ -1,4 +1,6 @@
 import pygame
+pygame.mixer.init
+
 from menuPresenter import menuPresenter 
 
 pygame.init()
