@@ -7,32 +7,54 @@ pygame.init()
 win = pygame.display.set_mode((1000, 700))
 pygame.display.set_caption("Stratagem")
 
-menuHandler = menuPresenter(pygame, win)
-currentScreen = menuHandler
 
-menuHandler.present()
+class gameManager(object):
+    def __init__(self, pygame, win):
+        self.pygame = pygame
+        self.win = win
+        self.menuHandler = None
+        self.currentScreen = None
+        self.levelPresenterActive = False
+        self.levelPresenter = None
 
-run = True
-
-while run:
-    pygame.time.delay(30)
-
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = pygame.mouse.get_pos()
-            btnClicked = menuHandler.checkIfClicked(x,y)
-            print(btnClicked)
-            btnClick = menuHandler.handleBtnClick(btnClicked)
-        elif event.type == pygame.QUIT:
-            run = False
-    
-  
-    
+    def run(self):
+        self.menuHandler.present()
         
-        
-##    win.fill((0, 0, 0))
+        run = True
 
-    pygame.display.update()
+        while run:
+            self.pygame.time.delay(30)
+
+            for event in self.pygame.event.get():
+                if event.type == self.pygame.MOUSEBUTTONDOWN:
+                    x, y = self.pygame.mouse.get_pos()
+
+                    if self.levelPresenterActive:
+                        btnClicked = self.levelPresenter.checkIfClicked(x,y)
+                        print(btnClicked)
+                        btnClick = self.levelPresenter.handleBtnClick(btnClicked)
+                    else:
+                        btnClicked = self.menuHandler.checkIfClicked(x,y)
+                        print(btnClicked)
+                        btnClick = self.menuHandler.handleBtnClick(btnClicked)
+                elif event.type == self.pygame.QUIT:
+                    run = False
+            
+          
+            
+                
+                
+        ##    win.fill((0, 0, 0))
+
+            self.pygame.display.update()
 
 
-pygame.quit()
+        self.pygame.quit()
+
+
+gameManager = gameManager(pygame, win)
+
+menuHandler = menuPresenter(pygame, win, gameManager)
+gameManager.menuHandler = menuHandler
+
+gameManager.run()

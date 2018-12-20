@@ -8,10 +8,11 @@ class menuPresenter(object):
 
     buttonList = []
     
-    def __init__(self, pygame, win):
+    def __init__(self, pygame, win, gameManager):
         print("Menu presenter started") 
         self.pygame = pygame
         self.win = win
+        self.gameManager = gameManager
         w, h = pygame.display.get_surface().get_size()
         self.buttonSound = pygame.mixer.Sound('ricochet.wav')
         print(w,h)
@@ -24,15 +25,16 @@ class menuPresenter(object):
 #The 'present' function draws each of the buttons for the various options 
     def present(self):
        self.win.fill((0,0,0))
-       self.playBtn = button(self.pygame, self.win, (255,51,51), (self.x_center - (200/2)), (self.y_center - (75/2 + 50 + 32.5)), 200, 75, "Play Game")
+       self.playBtn = button(self.pygame, self.win, (255,51,51), (self.x_center - (200/2)), (self.y_center - (75/2 + 50 + 32.5)), 200, 75, "Play Game", 20)
        self.playBtn.draw()
-       self.optionsBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (150/2)) , (self.y_center - (50/2)) , 150, 50, "Options")
+       self.optionsBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (150/2)) , (self.y_center - (50/2)) , 150, 50, "Options", 16)
        self.optionsBtn.draw()
-       self.exitBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (100/2)), (self.y_center - (50/2 - 50 - 25)), 100, 50, "Exit Game")
+       self.exitBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (100/2)), (self.y_center - (50/2 - 50 - 25)), 100, 50, "Exit Game", 12)
        self.exitBtn.draw()
        menuPresenter.buttonList.append(self.playBtn)
        menuPresenter.buttonList.append(self.optionsBtn)
        menuPresenter.buttonList.append(self.exitBtn)
+
 
 #This function is a check to see whether any of the buttons have been clicked"
     def checkIfClicked(self, x, y):
@@ -45,8 +47,10 @@ class menuPresenter(object):
         if button == self.playBtn:
             print("Game is ready to be played")
             self.buttonSound.play()
-            levelHandler = levelPresenter(self.pygame, self.win)
+            levelHandler = levelPresenter(self.pygame, self.win, self.gameManager)
             levelHandler.present()
+            self.gameManager.levelPresenterActive = True
+            self.gameManager.levelPresenter = levelHandler
         elif button == self.optionsBtn:
             print("Here are the various options")
             self.buttonSound.play()
