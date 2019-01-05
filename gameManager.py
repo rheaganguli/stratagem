@@ -40,9 +40,6 @@ class gameManager(object):
                 elif event.type == self.pygame.QUIT:
                     run = False
             
-          
-            
-                
                 
         ##    win.fill((0, 0, 0))
 

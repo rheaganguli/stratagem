@@ -14,7 +14,7 @@ class menuPresenter(object):
         self.win = win
         self.gameManager = gameManager
         w, h = pygame.display.get_surface().get_size()
-        self.buttonSound = pygame.mixer.Sound('ricochet.wav')
+   #     self.buttonSound = pygame.mixer.Sound('ricochet.wav')
         print(w,h)
         self.x_center = w/2
         self.y_center = h/2
@@ -46,7 +46,7 @@ class menuPresenter(object):
     def handleBtnClick(self, button):
         if button == self.playBtn:
             print("Game is ready to be played")
-            self.buttonSound.play()
+ #           self.buttonSound.play()
             levelHandler = levelPresenter(self.pygame, self.win, self.gameManager)
             levelHandler.present()
             self.gameManager.levelPresenterActive = True

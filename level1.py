@@ -1,4 +1,3 @@
-
 from button import button
 import time
 
@@ -101,6 +100,5 @@ class level1(object):
 ##        
 ##            
 ##     
-##        
 ##        
 ##        

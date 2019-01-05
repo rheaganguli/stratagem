@@ -64,6 +64,3 @@ class levelPresenter(object):
             print("LEVEL 4")
         elif button == self.levelFiveBtn:
             print("LEVEL 5")
-
-            
-    
