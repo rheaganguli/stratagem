@@ -1,10 +1,10 @@
 import pygame
 from button import button
-from level1 import level1
 import os
 
 
 
+#Class for the level menu
 class levelPresenter(object):
 
     buttonList = []
@@ -21,7 +21,7 @@ class levelPresenter(object):
         self.levelTwoBtn = None
         self.levelThreeBtn = None
         self.levelFourBtn = None 
-        self.levelFiveBtn = None 
+         
         
         
     def present(self):
@@ -34,33 +34,34 @@ class levelPresenter(object):
         self.levelThreeBtn.draw()
         self.levelFourBtn = button(self.pygame, self.win, (255,90,185), (self.x_center - (100/2)), (self.y_center + 100), 100, 50, "Level 4",13)
         self.levelFourBtn.draw()
-        self.levelFiveBtn = button(self.pygame, self.win, (255,12,94), (self.x_center - (100/2)), (self.y_center + 200), 100, 50, "Level 5",13)
-        self.levelFiveBtn.draw()
+        
         levelPresenter.buttonList.append(self.levelOneBtn)
         levelPresenter.buttonList.append(self.levelTwoBtn)
         levelPresenter.buttonList.append(self.levelThreeBtn)
         levelPresenter.buttonList.append(self.levelFourBtn)
-        levelPresenter.buttonList.append(self.levelFiveBtn)
+        
         print("level has been loaded")
 
-
+#This function is responsible for matching the x & y co-ordinates of the mouse click to those of the button
     def checkIfClicked(self, x, y):
         for button in levelPresenter.buttonList:
             if button.clicked((x,y)):
                 return(button)
 
-
+#Takes the user to the respective screen depending on which button has been clicked
     def handleBtnClick(self, button):
         if button == self.levelOneBtn:
             print("LEVEL 1")
-            levelOne = level1(self.win, self.pygame)
-            levelOne.runInvestigation()
+            import level1
         elif button == self.levelTwoBtn:
             print("LEVEL 2")
-            os.system('python maze.py')
+            os.system("python3 server.py")
+            os.system('python3 maze.py')
         elif button == self.levelThreeBtn:
             print("LEVEL 3")
+            os.system("python3 level1.py")
         elif button == self.levelFourBtn:
             print("LEVEL 4")
-        elif button == self.levelFiveBtn:
-            print("LEVEL 5")
+            os.system("python3 level4.py")
+    
+        

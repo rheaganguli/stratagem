@@ -2,6 +2,7 @@ import turtle
 import math
 import random
 import os
+from network import Network
 
 wn = turtle.Screen()
 wn.bgcolor((0,0,0))
@@ -11,7 +12,10 @@ wn.tracer(0)
 print('stage 1')
 images = ["R2.gif", "L6.gif", "R2E.gif", "L5E.gif"]
 
-cluePics = ["my_tweet.gif", 'clue_2.gif']
+cluePics = ["R2.gif", "L6.gif", "R2E.gif", "L5E.gif", "R2.gif"]
+
+instToShow = "Hidden Maze: Together you must try and find and solve the 5 clues.\nThe clues are scattered around the maze\nHowever, the maze is hidden. Use the arrow keys to move. \nHit 'Enter' when you are ready to begin."
+instructionsShown = False 
 
 for image in images:
     turtle.register_shape(image)
@@ -23,6 +27,10 @@ class Pen(turtle.Turtle):
         self.color("white")
         self.penup()
         self.speed(0)
+        self.hideturtle()
+
+    def show(self):
+        self.showturtle()
 
 #Creates the squares over the maze so that the maze is hidden from the gamers
 class shadowPen(turtle.Turtle):
@@ -40,13 +48,19 @@ class shadowPen(turtle.Turtle):
         self.hideturtle()
 
 class Player(turtle.Turtle):
-    def __init__(self):
+    def __init__(self, x, y):
         turtle.Turtle.__init__(self)
         self.shape("R2.gif")
         self.color("blue")
         self.penup()
         self.speed(0)
         self.gold = 0
+        self.x = x
+        self.y = y
+        self.hideturtle()
+
+    def show(self):
+        self.showturtle()
 
     def go_up(self):
         move_to_x = self.xcor()
@@ -92,72 +106,180 @@ class Player(turtle.Turtle):
             return False
 
 
-class Treasure(turtle.Turtle):
-    def __init__(self, x, y):
-        turtle.Turtle.__init__(self)
-        self.shape("circle")
-        self.color("gold")
-        self.penup()
-        self.speed(0)
-        self.gold = 100
-        self.goto(x, y)
-
-    def destroy(self):
-        self.goto(2000,2000)
-        self.hideturtle()
+##class Treasure(turtle.Turtle):
+##    def __init__(self, x, y):
+##        turtle.Turtle.__init__(self)
+##        self.shape("circle")
+##        self.color("gold")
+##        self.penup()
+##        self.speed(0)
+##        self.gold = 100
+##        self.goto(x, y)
+##       
+##
+##    def destroy(self):
+##        self.goto(2000,2000)
+##        self.hideturtle()
 
 
 class Clue(turtle.Turtle):
-    def __init__(self, x, y, clue):
+    def __init__(self, x, y, clue, y_offset):
         turtle.Turtle.__init__(self)
         self.shape("circle")
         self.color("green")
         self.penup()
         self.speed(0)
-        self.clue = cluePics[clue]
+        self.text = clue
+        self.y_offset = y_offset
         self.goto(x, y)
-        self.x = x
-        self.y = y
-        
-
-    def showClue(self):
-        self.shape(self.clue)
-        self.goto(self.x, self.y - 600)
 
     def destroy(self):
         self.goto(2000,2000)
         self.hideturtle()
- 
+
+class textTurt(turtle.Turtle):
+    def __init__(self, text, x, y):
+        turtle.Turtle.__init__(self)
+        self.y = y
+        self.x = x
+        self.text = text
+        self.penup()
+        self.goto(self.x, self.y)
+        self.color("white")
+        self.hideturtle()
+        self.speed(0)
+
+def filled_rectangle(t, l, w):
+    t.begin_fill()
+    for i in range(2):
+            t.right(90)
+            t.forward(l)
+            t.right(90)
+            t.forward(w)
+    t.end_fill()
+
+#covers previous question in order to paste new one over it
+class cleanCoverup(turtle.Turtle):
+    def __init__(self, x, y):
+        turtle.Turtle.__init__(self)
+        self.shape("square")
+        self.color("black")
+        self.penup()
+        self.goto(x, y)
+       
+    def destroy(self):
+        self.goto(2000,2000)
+        self.hideturtle()
+
+
+
+class Text(turtle.Turtle):
+    def __init__(self, y, text):
+        turtle.Turtle.__init__(self)
+        self.color("white")
+        self.penup()
+        self.y = -275 - y
+        self.goto(-264, self.y)
+        self.text = text
+        self.hideturtle()
+        self.write(text, move=False, align="left", font=("Arial", 16, "normal"))
+
+def printToPlayer(textTurtle):
+    print("printToPlayer")
+    cover = cleanCoverup(500, -210)
+    filled_rectangle(cover, 1000, 1000)
+    textTurtle.write(textTurtle.text, move=False, align="left", font=("Comic Sans MS", 16, "normal"))
+
+def showPubInfo():
+    textTurtle = textTurt("STRATEGEM \n23/07/2019", 220, -300)
+    printToPlayer(textTurtle)
+    
+
+
+def showInstructions():
+    print("moveToNext")
+    textTurtle = textTurt(instToShow, -250, 150)
+    printToPlayer(textTurtle)
+    wn.update()
+    instructionsShown = True
+
+showInstructions()
+
+
+
+def loadMaze():
+    if not instructionsShown:
+        cover = cleanCoverup(500, 500)
+        filled_rectangle(cover, 1000, 1000)
+        global pen, player, player2
+        #create class instances
+        pen = Pen()
+        player = Player(0,0)
+        player2 = Player(0,0)
+        setup_maze(levels[1])
+        setup_shadow(shadow)
+        player.show()
+        player2.show()
+        pen.show()
+        turtle.onkey(player.go_left, "Left")
+        turtle.onkey(player.go_right, "Right")
+        turtle.onkey(player.go_up, "Up")
+        turtle.onkey(player.go_down, "Down")
+        showPubInfo()
+
+        #Main Game Loop
+        while True:
+
+            for shadowTurtle in shadows:
+                if player.is_collision(shadowTurtle) or player2.is_collision(shadowTurtle):
+                    print("I'm checking for shadow")
+                    shadowTurtle.destroy()
+                    shadows.remove(shadowTurtle)
+
+            for clue in clues:
+                if player.is_collision(clue):
+                    text = Text(clue.y_offset, clue.text)
+                    texts.append(text)
+                    clue.destroy()
+                    clues.remove(clue)
+                    
+            player2.x, player2.y = parse_data(send_data())
+            player2.goto(player2.x, player2.y)
+
+            
+            wn.update()
+
+    
 print('stage 2')       
 levels = [""]
 shadows = [""]
-#X's represent the walls of the maze, P represents player and T represents the clues
+#X's represent the walls of the maze, P,Q represents player other letters represents the clues
 level_1 = [
 "XXXXXXXXXXXXXXXXXXXXXXXXX",
-"XP  XXXXXXXE         XXXX",
+"XPQ XXXXXXX          XXXX",
 "X  XXXXXXX  XXXXXX  XXXXX",
 "X       XX  XXXXXX  XXXXX",
-"XC      XX  XXXT      EXX",
-"XXXXXX  XX  XXX        XX",
+"XR      XX  XXXX       XX",
+"XXXXXX  XX  XXXH       XX",
 "XXXXXX  XX  XXXXXX  XXXXX",
 "XXXXXX  XX    XXXX  XXXXX",
-"X  XXX        XXXXT  XXXX",
+"X  XXX        XXXX  XXXXX",
 "X  XXX  XXXXXXXXXXXXXXXXX",
 "X         XXXXXXXXXXXXXXX",
-"XT                XXXXXXX",
-"XXXXXXXXXXXX     XXXXX  X",
+"XX                XXXXXXX",
+"XXXXXXXXXXXX     XXXXXA X",
 "XXXXXXXXXXXXXXX  XXXXX  X",
-"XXX  XXXXXXXXXXT        X",
-"XXXE                    X",
-"XXXT         XXXXXXXXXXXX",
+"XXX  XXXXXXXXXX         X",
+"XXX                     X",
+"XXE          XXXXXXXXXXXX",
 "XXXXXXXXXX  XXXXXXXXXXXXX",
 "XXXXXXXXXX              X",
-"XX   XXXXXT             X",
+"XX   XXXXX              X",
 "XX   XXXXXXXXXXXXX  XXXXX",
 "XX    XXXXXXXXXXXX  XXXXX",
-"XX          XXXXT       X",
+"XXG         XXXX        X",
 "XXXX                    X",
-"XXXXXXXXXXXXXXXXXXXXXXXXX"
+"XXXXXXXXXXXXXXXXXXXXXXXXX",
 ]
 
 shadow = [
@@ -190,6 +312,7 @@ shadow = [
 
 treasures = []
 clues = []
+texts = []
 enemies = []
 shadows = []
 #add maze to mazes list
@@ -198,9 +321,7 @@ levels.append(level_1)
 print('stage 3')
 os.system('python3 server.py')
 
-#create class instances
-pen = Pen()
-player = Player()
+
 
 walls = []            
 
@@ -221,13 +342,32 @@ def setup_maze(level):
                 pen.stamp()
                 walls.append((screen_x, screen_y))
             if character == "P":
-                player.goto(screen_x, screen_y)
-            if character == "T":
-                treasure = Treasure(screen_x, screen_y)
-                treasures.append(treasure)
-            if character == "C":
-                clue = Clue(screen_x, screen_y, 0)
+                player.x = screen_x
+                player.y =  screen_y
+                player.goto(player.x, player.y)
+            if character == "Q":
+                player2.x = screen_x
+                player2.y =  screen_y
+                player2.goto(player2.x, player2.y)
+##            if character == "T":
+##                treasure = Treasure(screen_x, screen_y)
+##                treasures.append(treasure)
+            if character == "R":
+                clue = Clue(screen_x, screen_y, "1. What can fly without wings?", 0)
                 clues.append(clue)
+            if character == "H":
+                clue = Clue(screen_x, screen_y, "2. I begin the instruments that open doors, yet I lie in the middle of the sky?", 25)
+                clues.append(clue)
+            if character == "E":
+                clue = Clue(screen_x, screen_y, "3. Time when dreams come true?", 50)
+                clues.append(clue)
+            if character == "A":
+                clue = Clue(screen_x, screen_y, "4. I form in an instant but I last a lifetime", 75)
+                clues.append(clue)
+            if character == "G":
+                clue = Clue(screen_x, screen_y, "5. I am your most powerful weapon; I come before your eyes.", 100)
+                clues.append(clue)
+            
 
 def setup_shadow(shadow):
     for y in range(len(shadow)):
@@ -243,22 +383,35 @@ def setup_shadow(shadow):
                 shadowTurtle = shadowPen(screen_x, screen_y)
                 shadows.append(shadowTurtle)
 
-
-        
 print('stage 4')
+
+net = Network()
+
+def send_data():
+    """
+    Send position to server
+    :return: None
+    """
+    data = str(net.id) + ":" + str(player.xcor()) + "," + str(player.ycor())
+    reply = net.send(data)
+    return reply
+#Processes the data to the correct format
+def parse_data(data):
+    try:
+        d = data.split(":")[1].split(",")
+        return int(d[0]), int(d[1])
+    except:
+        return 0,0
 
 #set up the level
 
-setup_maze(levels[1])
-#setup_shadow(shadow)
+
 #print (walls)
 
 
+
 turtle.listen()
-turtle.onkey(player.go_left, "Left")
-turtle.onkey(player.go_right, "Right")
-turtle.onkey(player.go_up, "Up")
-turtle.onkey(player.go_down, "Down")
+turtle.onkey(loadMaze, "Return")
 
 wn.tracer(0)
 
@@ -266,30 +419,6 @@ print('Running client')
 os.system('python3 client.py')
 
 print('stage 5')
-#Main Game Loop
-while True:
-
-    for treasure in treasures:
-        if player.is_collision(treasure):
-            #Adds treasure gold to player gold
-            player.gold += treasure.gold
-            print("Player Gold: {}".format(player.gold))
-            treasure.destroy()
-            treasures.remove(treasure)
-
-    for shadowTurtle in shadows:
-        if player.is_collision(shadowTurtle):
-            print("I'm checking for shadow")
-            shadowTurtle.destroy()
-            shadows.remove(shadowTurtle)
-
-    for clue in clues:
-        if player.is_collision(clue):
-            print("Clue found")
-            clue.showClue()
-
-    
-    wn.update()
 
 
 print('stage 6')

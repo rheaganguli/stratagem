@@ -24,11 +24,12 @@ class menuPresenter(object):
 
 #The 'present' function draws each of the buttons for the various options 
     def present(self):
+       print("Menu Pesenter Present")
        self.win.fill((0,0,0))
        self.playBtn = button(self.pygame, self.win, (255,51,51), (self.x_center - (200/2)), (self.y_center - (75/2 + 50 + 32.5)), 200, 75, "Play Game", 20)
        self.playBtn.draw()
-       self.optionsBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (150/2)) , (self.y_center - (50/2)) , 150, 50, "Options", 16)
-       self.optionsBtn.draw()
+       self.instructionsBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (150/2)) , (self.y_center - (50/2)) , 150, 50, "Instructions", 16)
+       self.instructionsBtn.draw()
        self.exitBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (100/2)), (self.y_center - (50/2 - 50 - 25)), 100, 50, "Exit Game", 12)
        self.exitBtn.draw()
        menuPresenter.buttonList.append(self.playBtn)
@@ -51,8 +52,8 @@ class menuPresenter(object):
             levelHandler.present()
             self.gameManager.levelPresenterActive = True
             self.gameManager.levelPresenter = levelHandler
-        elif button == self.optionsBtn:
-            print("Here are the various options")
+        elif button == self.instructionsBtn:
+            print("Here are the instructions for the game")
             self.buttonSound.play()
         elif button == self.exitBtn:
             print("You have exited the game")

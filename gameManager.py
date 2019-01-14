@@ -18,6 +18,7 @@ class gameManager(object):
         self.levelPresenter = None
 
     def run(self):
+        print("gameManager Run") 
         self.menuHandler.present()
         
         run = True
