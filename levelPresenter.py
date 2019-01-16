@@ -52,7 +52,7 @@ class levelPresenter(object):
     def handleBtnClick(self, button):
         if button == self.levelOneBtn:
             print("LEVEL 1")
-            import level1
+            os.system("python level1.py")
         elif button == self.levelTwoBtn:
             print("LEVEL 2")
             os.system("python3 server.py")

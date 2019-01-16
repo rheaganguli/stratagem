@@ -242,6 +242,7 @@ def loadMaze():
                     texts.append(text)
                     clue.destroy()
                     clues.remove(clue)
+          
                     
             player2.x, player2.y = parse_data(send_data())
             player2.goto(player2.x, player2.y)

@@ -6,6 +6,11 @@ import sys
 
 
 wn = turtle.Screen()
+wn.bgcolor("white")
+wn.addshape("investigation.gif")
+wn.update()
+wn.setup(1000,1000)
+wn.tracer(0)
 
 questions = []
 
@@ -74,7 +79,6 @@ for i in range(len(listOfQuests)):
     quest = listOfQuests[i]
     question = textTurt(quest, -150, -320)
     questions.append(question)
-
 
 
 def printToPlayer(textTurtle):
@@ -170,21 +174,12 @@ def askQuestion(numb):
         printToPlayer(textTurtle)
         sys.exit("Player Lost")
 
-def main():
-    wn.bgcolor("white")
-    wn.addshape("investigation.gif")
-    wn.update()
-    wn.setup(1000,1000)
-    wn.tracer(0)
-    showInstructions()
-    turtle.listen()
-    turtle.onkey(LoadQuestions, "Right")
 
+showInstructions()
 
-
-if __name__ == "__main__":
-    main()
-    wn.mainloop()
+turtle.listen()
+turtle.onkey(LoadQuestions, "Right")
+wn.mainloop()
         
  
     
