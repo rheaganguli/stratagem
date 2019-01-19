@@ -1,12 +1,11 @@
 import pygame
 pygame.mixer.init
 
-from menuPresenter import menuPresenter 
+from menuPresenter import menuPresenter
 
 pygame.init()
 win = pygame.display.set_mode((1000, 700))
 pygame.display.set_caption("Stratagem")
-
 
 class gameManager(object):
     def __init__(self, pygame, win):

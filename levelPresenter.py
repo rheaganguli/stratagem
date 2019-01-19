@@ -1,6 +1,8 @@
 import pygame
 from button import button
 import os
+from game_constants import const 
+
 
 
 
@@ -23,8 +25,8 @@ class levelPresenter(object):
         self.levelFourBtn = None 
          
         
-        
     def present(self):
+        print("running server")
         self.win.fill((0,0,0))
         self.levelOneBtn = button(self.pygame, self.win, (255,153,51), (self.x_center - (100/2)), (self.y_center - 200), 100, 50, "Level 1", 13)
         self.levelOneBtn.draw()
@@ -52,16 +54,15 @@ class levelPresenter(object):
     def handleBtnClick(self, button):
         if button == self.levelOneBtn:
             print("LEVEL 1")
-            os.system("python level1.py")
+            os.system("python37 level1.py")
         elif button == self.levelTwoBtn:
             print("LEVEL 2")
-            os.system("python3 server.py")
-            os.system('python3 maze.py')
+            os.system('python37 maze.py')
         elif button == self.levelThreeBtn:
             print("LEVEL 3")
-            os.system("python3 level1.py")
+            os.system("python37 level3.py")
         elif button == self.levelFourBtn:
             print("LEVEL 4")
-            os.system("python3 level4.py")
+            os.system("python37 level4.py")
     
         

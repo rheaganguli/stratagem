@@ -1,22 +1,11 @@
 import pygame
+from level3_constants import level3_consts
+from game_constants import const
 pygame.init()
 
-win = pygame.display.set_mode((500,480))
-
-pygame.display.set_caption("First Game")
-
-walkRight = [pygame.image.load('R1.png'), pygame.image.load('R2.png'), pygame.image.load('R3.png'), pygame.image.load('R4.png'), pygame.image.load('R5.png'), pygame.image.load('R6.png'), pygame.image.load('R7.png'), pygame.image.load('R8.png'), pygame.image.load('R9.png')]
-walkLeft = [pygame.image.load('L1.png'), pygame.image.load('L2.png'), pygame.image.load('L3.png'), pygame.image.load('L4.png'), pygame.image.load('L5.png'), pygame.image.load('L6.png'), pygame.image.load('L7.png'), pygame.image.load('L8.png'), pygame.image.load('L9.png')]
-bg = pygame.image.load('bg.jpg')
-char = pygame.image.load('standing.png')
-
+win = pygame.display.set_mode((const.DIM_500,const.DIM_480))
+pygame.display.set_caption("Level 3")
 clock = pygame.time.Clock()
-
-#bulletSound = pygame.mixer.Sound('bullet.wav')
-##hitSound = pygame.mixer.Sound('hit.wav')
-##
-##music = pygame.mixer.music.load('music.mp3')
-##pygame.mixer.music.play(-1)
 
 score = 0
 
@@ -41,18 +30,19 @@ class player(object):
 
         if not(self.standing):
             if self.left:
-                win.blit(walkLeft[self.walkCount//3], (self.x,self.y))
+                win.blit(level3_consts.LEVEL3_WALK_LEFT[self.walkCount//3], (self.x,self.y))
                 self.walkCount += 1
             elif self.right:
-                win.blit(walkRight[self.walkCount//3], (self.x,self.y))
+                win.blit(level3_consts.LEVEL3_WALK_RIGHT
+            [self.walkCount//3], (self.x,self.y))
                 self.walkCount +=1
         else:
             if self.right:
-                win.blit(walkRight[0], (self.x, self.y))
+                win.blit(level3_consts.LEVEL3_WALK_RIGHT
+            [0], (self.x, self.y))
             else:
-                win.blit(walkLeft[0], (self.x, self.y))
+                win.blit(level3_consts.LEVEL3_WALK_LEFT[0], (self.x, self.y))
         self.hitbox = (self.x + 17, self.y + 11, 29, 52)
-        #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
 
     def hit(self):
         self.isJump = False
@@ -60,9 +50,7 @@ class player(object):
         self.x = 100
         self.y = 410
         self.walkCount = 0
-        font1 = pygame.font.SysFont('comicsans', 100)
-        text = font1.render('-5', 1, (255,0,0))
-        win.blit(text, (250 - (text.get_width()/2),200))
+        
         pygame.display.update()
         i = 0
         while i < 200:
@@ -72,8 +60,6 @@ class player(object):
                 if event.type == pygame.QUIT:
                     i = 201
                     pygame.quit()
-                
-
 
 class projectile(object):
     def __init__(self,x,y,radius,color,facing):
@@ -89,8 +75,6 @@ class projectile(object):
 
 
 class enemy(object):
-    walkRight = [pygame.image.load('R1E.png'), pygame.image.load('R2E.png'), pygame.image.load('R3E.png'), pygame.image.load('R4E.png'), pygame.image.load('R5E.png'), pygame.image.load('R6E.png'), pygame.image.load('R7E.png'), pygame.image.load('R8E.png'), pygame.image.load('R9E.png'), pygame.image.load('R10E.png'), pygame.image.load('R11E.png')]
-    walkLeft = [pygame.image.load('L1E.png'), pygame.image.load('L2E.png'), pygame.image.load('L3E.png'), pygame.image.load('L4E.png'), pygame.image.load('L5E.png'), pygame.image.load('L6E.png'), pygame.image.load('L7E.png'), pygame.image.load('L8E.png'), pygame.image.load('L9E.png'), pygame.image.load('L10E.png'), pygame.image.load('L11E.png')]
 
     def __init__(self, x, y, width, height, end):
         self.x = x
@@ -112,10 +96,11 @@ class enemy(object):
                 self.walkCount = 0
 
             if self.vel > 0:
-                win.blit(self.walkRight[self.walkCount //3], (self.x, self.y))
+                win.blit(level3_consts.LEVEL3_ENEMY_WALK_RIGHT
+            [self.walkCount //3], (self.x, self.y))
                 self.walkCount += 1
             else:
-                win.blit(self.walkLeft[self.walkCount //3], (self.x, self.y))
+                win.blit(level3_consts.LEVEL3_ENEMY_WALK_LEFT[self.walkCount //3], (self.x, self.y))
                 self.walkCount += 1
 
             pygame.draw.rect(win, (255,0,0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10))
@@ -147,9 +132,7 @@ class enemy(object):
         
 
 def redrawGameWindow():
-    win.blit(bg, (0,0))
-    text = font.render('Score: ' + str(score), 1, (0,0,0))
-    win.blit(text, (350, 10))
+    win.blit(level3_consts.LEVEL3_BG, (0,0))
     man.draw(win)
     goblin.draw(win)
     for bullet in bullets:
@@ -165,6 +148,7 @@ goblin = enemy(100, 410, 64, 64, 450)
 shootLoop = 0
 bullets = []
 run = True
+
 while run:
     clock.tick(27)
 
@@ -172,7 +156,7 @@ while run:
         if man.hitbox[1] < goblin.hitbox[1] + goblin.hitbox[3] and man.hitbox[1] + man.hitbox[3] > goblin.hitbox[1]:
             if man.hitbox[0] + man.hitbox[2] > goblin.hitbox[0] and man.hitbox[0] < goblin.hitbox[0] + goblin.hitbox[2]:
                 man.hit()
-                score -= 5
+                
 
     if shootLoop > 0:
         shootLoop += 1
@@ -198,7 +182,7 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_SPACE] and shootLoop == 0:
-##        bulletSound.play()
+
         if man.left:
             facing = -1
         else:

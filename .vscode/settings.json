@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.6/bin/python3"
+    "python.pythonPath": "C:\\Users\\mjfor\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "python.formatting.provider": "yapf"
 }

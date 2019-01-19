@@ -3,15 +3,14 @@ import math
 import random
 import os
 import sys
+from game_constants import const
 
 wn = turtle.Screen()
-wn.bgcolor("white")
+wn.bgcolor(const.COLOR_WHITE)
 wn.bgpic('l4.gif')
 wn.update()
-wn.setup(700,1000)
+wn.setup(const.DIM_700,const.DIM_1000)
 wn.tracer(0)
-
-instToShow = "Assuming O = 4, find the numeric value which corresponds to 'HEART'"
 
 instructionsShown = False 
 answerFound = False
@@ -29,13 +28,13 @@ def filled_rectangle(t, l, w):
 class cleanCoverup(turtle.Turtle):
     def __init__(self, x, y):
         turtle.Turtle.__init__(self)
-        self.shape("square")
-        self.color("white")
+        self.shape(const.SHAPE_SQUARE)
+        self.color(const.COLOR_WHITE)
         self.penup()
         self.goto(x, y)
        
     def destroy(self):
-        self.goto(2000,2000)
+        self.goto(const.DIM_2000,const.DIM_2000)
         self.hideturtle()
 
 class picTurt(turtle.Turtle):
@@ -56,35 +55,34 @@ class textTurt(turtle.Turtle):
         self.text = text
         self.penup()
         self.goto(self.x, self.y)
-        self.color("black")
+        self.color(const.COLOR_BLACK)
         self.hideturtle()
         self.speed(0)
 
 def printToPlayer(textTurtle):
     print("printToPlayer")
-    cover = cleanCoverup(500, -210)
-    filled_rectangle(cover, 1000, 1000)
-    textTurtle.write(textTurtle.text, move=False, align="left", font=("Comic Sans MS", 16, "normal"))
+    cover = cleanCoverup(const.POS_500, const.POS_MIN_210)
+    filled_rectangle(cover, const.DIM_1000, const.DIM_1000)
+    textTurtle.write(textTurtle.text, move=False, align=const.LEFT, font=(const.FONT, 16, const.TEXT_TYPE))
 
 def showPubInfo():
-    textTurtle = textTurt("STRATEGEM \n23/07/2019", -330, 350)
+    textTurtle = textTurt(const.PUB_INFO, const.POS_MIN_330, const.POS_350)
     printToPlayer(textTurtle)
     
 showPubInfo()
 
 def showInstructions():
     print("moveToNext")
-    textTurtle = textTurt(instToShow, -250, 150)
+    textTurtle = textTurt(const.LEVEL4_INSTRUCTIONS, const.POS_MIN_250, const.POS_MIN_150)
     printToPlayer(textTurtle)
     wn.update()
     instructionsShown = True
-
 
 showInstructions()
 
 while not answerFound:
     answer = turtle.textinput("Enter Your Answer Here ", "Enter the PIN code for the phone")
-    if answer == "10368":
+    if answer == const.LEVEL4_ANSWER:
         answerFound = True
         break
     elif answer == None:

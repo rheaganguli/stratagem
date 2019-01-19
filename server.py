@@ -4,6 +4,7 @@ import sys
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+print("server starting up")
 server = ''
 port = 5555
 
@@ -11,6 +12,7 @@ server_ip = socket.gethostbyname(server)
 
 try:
     s.bind((server, port))
+    print("server connected")
 
 except socket.error as e:
     print(str(e))

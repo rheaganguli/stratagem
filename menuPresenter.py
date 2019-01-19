@@ -4,8 +4,7 @@ from levelPresenter import levelPresenter
 
 #The Menu Presenter object is responsible for the 'Main Menu'
 class menuPresenter(object):
-
-
+    
     buttonList = []
     
     def __init__(self, pygame, win, gameManager):
@@ -35,7 +34,6 @@ class menuPresenter(object):
        menuPresenter.buttonList.append(self.playBtn)
        menuPresenter.buttonList.append(self.optionsBtn)
        menuPresenter.buttonList.append(self.exitBtn)
-
 
 #This function is a check to see whether any of the buttons have been clicked"
     def checkIfClicked(self, x, y):
